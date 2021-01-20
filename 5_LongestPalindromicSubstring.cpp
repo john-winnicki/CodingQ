@@ -1,23 +1,42 @@
 #include<iostream>
 using namespace std;
 #include <string>
-#include <unordered_map>
-#include <algorithm>
+// #include <unordered_map>
+// #include <algorithm>
 
-int lengthOfLongestSubstring(string s) {
-    unordered_map<char, int> hash;
+pair<int, int> expandAroundCenter(string s, int l, int r){
+    int tot = r-l+1;
     int len = s.length();
-    if(len==0) return 0;
-    int start = 0;
-    int maxi = 0;
-    for(int i = 0; i<len; i++){
-        if(hash.find(s[i])!=hash.end() && hash[s[i]]>=start){
-            start = hash[s[i]] + 1;
-        }
-        hash[s[i]] = i;
-        maxi = max(i-start, maxi);
+    l--;
+    r++;
+    while(l>=0 && r<len && s[l]==s[r]){
+        l--;
+        r++;
     }
-    return maxi+1;
+    return make_pair(l+1, r-1);
+}
+
+string longestPalindrome(string s) {
+    int len = s.length();
+    pair<int, int> fin;
+    fin = make_pair(0, 0);
+    for(int i = 0; i<len; i++){
+        pair<int, int> temp = expandAroundCenter(s, i, i);
+        if(temp.second-temp.first>fin.second-fin.first){
+            cout << temp.first << "   " << temp.second<< endl;
+            fin = temp;
+        }
+        if(i<len-1 && s[i]==s[i+1]){
+            temp = expandAroundCenter(s, i, i+1);
+            if(temp.second-temp.first>fin.second-fin.first){
+                cout << temp.first << "   " << temp.second<< endl;
+                fin = temp;
+            }
+        }
+        cout << fin.first << "   " << fin.second<< endl;
+    }
+    cout << fin.first << "   " << fin.second<< endl;
+    return s.substr(fin.first, fin.second-fin.first+1);
 }
 
 int main(){
@@ -30,7 +49,7 @@ int main(){
     string str;
     getline(cin, str);
 
-    cout << lengthOfLongestSubstring(str);
+    cout << longestPalindrome(str);
 
 	return 0;
 }
