@@ -11,11 +11,18 @@
  */
 class Solution {
 public:
-    TreeNode* invertTree(TreeNode* root) {
-        if(root==nullptr) return root;
-        swap(root->left, root->right);
-        invertTree(root->left);
-        invertTree(root->right);
-        return root;
+    int fin;
+    void kthUtil(TreeNode* root, int& k){
+        if(k<=0 || root == nullptr) return;
+        kthUtil(root->left, k);
+        k--;
+        if(k==0){
+            fin = root->val;
+        }
+        kthUtil(root->right, k);
+    }
+    int kthSmallest(TreeNode* root, int k) {
+        kthUtil(root, k);
+        return fin;
     }
 };
